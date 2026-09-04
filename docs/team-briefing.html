@@ -1,10 +1,10 @@
-<title>Defending the Build</title>
+<title>Praman Handbook</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <style>
   :root{
     --paper:#F0F1EE; --card:#FFFFFF; --ink:#191B1E; --ink-2:#3D444A;
     --mute:#6E756F; --line:#D6D8D2; --line-2:#E6E8E3;
-    --brass:#9A7016; --brass-soft:#F3EBD8;
+    --brass:#9A7016; --brass-soft:#F5EEDD;
     --pass:#1B6E5F; --fail:#B03A26; --fail-soft:#F8E9E5; --slate:#5F6B70;
     --shadow:0 1px 2px rgba(25,27,30,.05), 0 8px 24px -16px rgba(25,27,30,.25);
     --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
@@ -30,14 +30,13 @@
 
   *{box-sizing:border-box}
   body{background:var(--paper);color:var(--ink);font-family:var(--sans);
-       font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:820px;margin:0 auto;padding:0 22px 96px}
-  h1,h2,h3{text-wrap:balance;margin:0}
-  p{margin:0}
+       font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:790px;margin:0 auto;padding:0 22px 110px}
+  h1,h2,h3,h4{text-wrap:balance;margin:0}
+  p{margin:0;max-width:66ch}
   a{color:var(--brass)}
   :focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px}
 
-  /* millimetre rule — the one motif */
   .rule{height:13px;margin:0;border:0;
     background-image:
       repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 5px),
@@ -47,46 +46,60 @@
     background-repeat:repeat-x;
     border-bottom:1px solid var(--line)}
 
-  /* masthead */
   header{padding:52px 0 0}
   .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
     text-transform:uppercase;color:var(--brass);font-weight:500}
-  h1{font-family:var(--serif);font-size:clamp(38px,7vw,60px);line-height:1.02;
+  h1{font-family:var(--serif);font-size:clamp(38px,7vw,58px);line-height:1.03;
      font-weight:600;letter-spacing:-.02em;margin:14px 0 0}
   .sub{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--ink-2);
-    margin-top:14px;max-width:60ch}
+    margin-top:15px}
   .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
   .meta span{font-family:var(--mono);font-size:11.5px;color:var(--ink-2);
     border:1px solid var(--line);border-radius:2px;padding:4px 9px;background:var(--card)}
 
-  section{margin-top:56px}
-  h2{font-family:var(--serif);font-size:27px;font-weight:600;letter-spacing:-.01em}
-  .lede{color:var(--ink-2);margin-top:9px;max-width:66ch}
-  h3{font-family:var(--sans);font-size:15px;font-weight:600;letter-spacing:.01em}
+  /* orientation / contents */
+  .orient{background:var(--card);border:1px solid var(--line);border-radius:3px;
+    padding:26px 28px;margin-top:26px;box-shadow:var(--shadow)}
+  .orient p{font-size:15.5px;color:var(--ink-2)}
+  .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:9px 26px;margin-top:20px;padding-top:20px;border-top:1px solid var(--line-2)}
+  .toc a{display:grid;grid-template-columns:30px 1fr;gap:8px;text-decoration:none;
+    font-size:14.5px;color:var(--ink);align-items:baseline}
+  .toc a:hover span:last-child{text-decoration:underline}
+  .toc .n{font-family:var(--mono);font-size:11.5px;color:var(--brass)}
 
-  /* the memorised sentence */
-  .thesis{background:var(--card);border:1px solid var(--line);border-radius:3px;
-    padding:30px 32px;box-shadow:var(--shadow);margin-top:20px}
-  .thesis p{font-family:var(--serif);font-size:22px;line-height:1.45;letter-spacing:-.01em}
-  .thesis .note{font-family:var(--sans);font-size:14px;color:var(--mute);
-    margin-top:16px;font-style:normal}
+  .part{margin-top:66px}
+  .partno{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--brass);font-weight:500}
+  h2{font-family:var(--serif);font-size:31px;font-weight:600;letter-spacing:-.015em;margin-top:9px}
+  .lede{color:var(--ink-2);margin-top:11px;font-size:16.5px}
+  section > p, .body > p{margin-top:15px;color:var(--ink-2)}
+  .body p strong, section > p strong{color:var(--ink);font-weight:600}
+  h3{font-family:var(--serif);font-size:21px;font-weight:600;margin-top:34px}
+  h4{font-family:var(--sans);font-size:15px;font-weight:600;margin-top:26px}
 
-  /* pipeline — a real sequence, so it is numbered */
-  .stages{display:flex;flex-direction:column;gap:0;margin-top:24px;
-    border-top:1px solid var(--line)}
-  .stage{display:grid;grid-template-columns:56px 1fr;gap:20px;
-    padding:22px 4px;border-bottom:1px solid var(--line)}
+  /* plain-language explainer */
+  .plain{background:var(--brass-soft);border-radius:3px;padding:19px 22px;margin-top:19px}
+  .plain .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--brass);font-weight:600}
+  .plain p{margin-top:8px;font-size:15.5px;color:var(--ink);max-width:64ch}
+  .plain p + p{margin-top:10px}
+
+  /* pipeline stages */
+  .stages{margin-top:26px;border-top:1px solid var(--line)}
+  .stage{display:grid;grid-template-columns:52px 1fr;gap:20px;
+    padding:24px 4px;border-bottom:1px solid var(--line)}
   .stage .idx{font-family:var(--mono);font-size:12px;color:var(--brass);
-    padding-top:3px;font-weight:500}
-  .stage h3{font-family:var(--serif);font-size:20px;font-weight:600}
-  .stage .file{font-family:var(--mono);font-size:12px;color:var(--mute);margin-top:3px}
-  .stage p{margin-top:9px;color:var(--ink-2);max-width:58ch}
-  .stage .say{margin-top:11px;font-size:14.5px;color:var(--ink);
-    border-left:2px solid var(--brass);padding-left:13px}
-  .stage .say b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--brass);display:block;margin-bottom:3px;font-weight:500}
+    padding-top:5px;font-weight:500}
+  .stage h3{font-family:var(--serif);font-size:21px;font-weight:600;margin-top:0}
+  .stage .file{font-family:var(--mono);font-size:12px;color:var(--mute);margin-top:4px}
+  .stage p{margin-top:11px;color:var(--ink-2);max-width:58ch}
 
-  /* stack table */
+  /* flow diagram */
+  .flow{margin-top:24px;background:var(--card);border:1px solid var(--line);
+    border-radius:3px;padding:24px;overflow-x:auto}
+  .flow svg{display:block;min-width:520px;width:100%;height:auto}
+
   .tablewrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);
     border-radius:3px;background:var(--card)}
   table{border-collapse:collapse;width:100%;min-width:540px}
@@ -96,18 +109,16 @@
     color:var(--mute);font-weight:500;background:var(--paper)}
   tr:last-child td{border-bottom:0}
   td:first-child{font-family:var(--mono);font-size:13px;color:var(--ink);white-space:nowrap}
-  td:nth-child(2){color:var(--ink-2)}
+  td:nth-child(n+2){color:var(--ink-2)}
 
-  /* differentiators */
-  .diffs{display:flex;flex-direction:column;gap:14px;margin-top:22px}
-  .diff{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
-  .diff .dot{width:7px;height:7px;border-radius:50%;background:var(--brass);margin-top:9px}
-  .diff h3{font-family:var(--serif);font-size:18px;font-weight:600}
-  .diff p{color:var(--ink-2);font-size:15px;margin-top:4px;max-width:60ch}
+  .diffs{display:flex;flex-direction:column;gap:26px;margin-top:26px}
+  .diff{display:grid;grid-template-columns:auto 1fr;gap:17px;align-items:start}
+  .diff .dot{width:7px;height:7px;border-radius:50%;background:var(--brass);margin-top:10px}
+  .diff h3{font-family:var(--serif);font-size:19px;font-weight:600;margin-top:0}
+  .diff p{color:var(--ink-2);font-size:15.5px;margin-top:7px;max-width:60ch}
 
-  /* numbers */
-  .nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));
-    gap:1px;margin-top:22px;background:var(--line);border:1px solid var(--line);border-radius:3px}
+  .nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+    gap:1px;margin-top:24px;background:var(--line);border:1px solid var(--line);border-radius:3px}
   .num{background:var(--card);padding:16px 17px}
   .num .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
     text-transform:uppercase;color:var(--brass);font-weight:500}
@@ -115,11 +126,10 @@
     font-variant-numeric:tabular-nums;letter-spacing:-.01em}
   .num .c{font-size:13px;color:var(--mute);margin-top:5px;line-height:1.45}
 
-  /* Q&A — hairline list, not boxes */
-  .qa{margin-top:14px;border-top:1px solid var(--line)}
+  .qa{margin-top:20px;border-top:1px solid var(--line)}
   .qa details{border-bottom:1px solid var(--line)}
   .qa summary{cursor:pointer;list-style:none;padding:18px 30px 18px 0;position:relative;
-    font-family:var(--serif);font-size:18.5px;font-weight:500;line-height:1.4}
+    font-family:var(--serif);font-size:18px;font-weight:500;line-height:1.4}
   .qa summary::-webkit-details-marker{display:none}
   .qa summary::after{content:"+";position:absolute;right:4px;top:17px;
     font-family:var(--mono);font-size:19px;color:var(--brass);font-weight:400}
@@ -128,41 +138,39 @@
   .qa .a p + p{margin-top:11px}
   .qa .a em{color:var(--ink);font-style:normal;font-weight:600}
 
-  /* scripts */
-  .scripts{display:flex;flex-direction:column;gap:13px;margin-top:22px}
-  .script{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:17px 19px}
-  .script .when{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
-    text-transform:uppercase;color:var(--mute);font-weight:500}
-  .script .line{font-family:var(--serif);font-size:17px;margin-top:8px;line-height:1.5}
-
-  /* do not claim — the one place we spend a border */
   .traps{display:flex;flex-direction:column;gap:11px;margin-top:22px}
   .trap{background:var(--fail-soft);border-left:3px solid var(--fail);border-radius:0 3px 3px 0;
     padding:15px 18px}
   .trap .no{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
     text-transform:uppercase;color:var(--fail);font-weight:600}
-  .trap .swap{margin-top:7px;font-size:15px;line-height:1.55}
+  .trap .swap{margin-top:7px;font-size:15px;line-height:1.55;max-width:62ch}
   .trap .swap b{color:var(--pass);font-weight:600}
 
-  /* ownership */
-  .owners{margin-top:22px;border:1px solid var(--line);border-radius:3px;
-    background:var(--card);overflow:hidden}
-  .owner{display:grid;grid-template-columns:1fr 130px;gap:14px;padding:15px 18px;
-    border-bottom:1px solid var(--line-2);align-items:baseline}
-  .owner:last-child{border-bottom:0}
-  .owner h3{font-family:var(--serif);font-size:17px;font-weight:600}
-  .owner p{font-size:14px;color:var(--ink-2);margin-top:3px}
-  .owner .name{font-family:var(--mono);font-size:12px;color:var(--mute);
-    border-bottom:1px dashed var(--line);padding-bottom:2px;text-align:right}
+  /* timeline */
+  .tl{margin-top:26px;border-left:2px solid var(--line);padding-left:0}
+  .tl .ev{position:relative;padding:0 0 30px 26px}
+  .tl .ev::before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;
+    border-radius:50%;background:var(--paper);border:2px solid var(--brass)}
+  .tl .ev.done::before{background:var(--brass)}
+  .tl .when{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--brass);font-weight:500}
+  .tl h4{margin-top:5px;font-size:17px;font-family:var(--serif);font-weight:600}
+  .tl p{margin-top:5px;font-size:14.5px;color:var(--ink-2);max-width:60ch}
 
-  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);
-    font-size:13.5px;color:var(--mute);max-width:64ch}
+  /* glossary */
+  .gloss{margin-top:22px;border-top:1px solid var(--line)}
+  .gt{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:14px 0;
+    border-bottom:1px solid var(--line-2)}
+  .gt dt{font-family:var(--mono);font-size:13px;color:var(--ink);font-weight:500}
+  .gt dd{margin:0;font-size:14.5px;color:var(--ink-2)}
 
-  @media (max-width:560px){
-    .stage{grid-template-columns:1fr;gap:6px}
+  footer{margin-top:70px;padding-top:24px;border-top:1px solid var(--line);
+    font-size:13.5px;color:var(--mute)}
+
+  @media (max-width:600px){
+    .stage{grid-template-columns:1fr;gap:7px}
     .stage .idx{padding-top:0}
-    .owner{grid-template-columns:1fr;gap:6px}
-    .owner .name{text-align:left}
+    .gt{grid-template-columns:1fr;gap:4px}
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -170,39 +178,207 @@
 <div class="wrap">
 
 <header>
-  <div class="eyebrow">SIH 2026 · PS 26034 · Internal round briefing</div>
-  <h1>Defending the Build</h1>
-  <p class="sub">What our system does, why it is built this way, and how to answer a judge who is trying to find out whether we actually understand it.</p>
+  <div class="eyebrow">Caffiene and Debugging · SIH 2026 · PS 26034</div>
+  <h1>Praman Handbook</h1>
+  <p class="sub">Everything about what we are building and why — the problem, the idea, and the whole technical design, written so you do not need a development background to follow it.</p>
   <div class="meta">
     <span>Ministry of Consumer Affairs</span>
     <span>Dept. of Consumer Affairs</span>
     <span>Software · Miscellaneous</span>
-    <span>Legal Metrology (Packaged Commodities) Rules, 2011</span>
+    <span>Grand Finale · Dec 2026</span>
+  </div>
+
+  <div class="orient">
+    <p>This is the single document to read before you talk to anyone about this project. It takes about twenty minutes. Parts 1–3 are the idea and can be read by anyone. Parts 4–6 are the technical design, explained in plain language — every technical term is unpacked the first time it appears, and there is a glossary at the end.</p>
+    <div class="toc">
+      <a href="#p1"><span class="n">01</span><span>The problem we picked</span></a>
+      <a href="#p2"><span class="n">02</span><span>What we are building</span></a>
+      <a href="#p3"><span class="n">03</span><span>Why we win</span></a>
+      <a href="#p4"><span class="n">04</span><span>How it actually works</span></a>
+      <a href="#p5"><span class="n">05</span><span>The stack</span></a>
+      <a href="#p6"><span class="n">06</span><span>What we are not building</span></a>
+      <a href="#p7"><span class="n">07</span><span>The plan</span></a>
+      <a href="#p8"><span class="n">08</span><span>Limits and honesty</span></a>
+      <a href="#p9"><span class="n">09</span><span>Questions you will get</span></a>
+      <a href="#p10"><span class="n">10</span><span>Glossary</span></a>
+    </div>
   </div>
 </header>
 
-<hr class="rule" style="margin-top:34px">
+<hr class="rule" style="margin-top:40px">
 
-<section>
-  <h2>If you remember one sentence</h2>
-  <div class="thesis">
-    <p>We are not building a scanner. We are building an <em>evidence pipeline</em> — a photograph becomes a millimetre measurement, becomes a cited rule, becomes a report an enforcement officer can sign.</p>
-    <p class="note">Every answer below is a variation on this sentence. If a question knocks you off balance, come back to it.</p>
+<div class="part" id="p1">
+  <div class="partno">Part 01</div>
+  <h2>The problem we picked</h2>
+  <p class="lede">Problem Statement 26034, set by the Department of Consumer Affairs under the Ministry of Consumer Affairs, Food &amp; Public Distribution.</p>
+
+  <div class="body">
+    <p>Every packaged item sold in India — a biscuit packet, a bottle of oil, a bag of cement — is legally required to print a specific set of declarations on its label. This comes from the <strong>Legal Metrology Act, 2009</strong> and the <strong>Legal Metrology (Packaged Commodities) Rules, 2011</strong>, which we will call the LMPC Rules from here on.</p>
+
+    <p>Nine things must appear: who manufactured or packed it and their full address, the country of origin if imported, the common name of the product, the net quantity, the month and year of manufacture, the maximum retail price, consumer care contact details including a phone number and an email address, the unit sale price, and the dimensions where size matters.</p>
+
+    <p>But the law goes considerably further than "these things must be printed". It also specifies <strong>how</strong> they must be printed — how tall the letters must be in millimetres, how much blank space must surround the net quantity, and whether the price stands out from the background. Those requirements are where this problem gets genuinely interesting, and we will come back to them.</p>
+
+    <h3>Why this is a real problem, not a made-up one</h3>
+    <p>Enforcement is done by state Legal Metrology departments — inspectors who physically visit shops, warehouses and factories. There are millions of products and a few thousand inspectors. Checking a label properly means reading nine declarations and, in principle, measuring letter heights with a ruler. Nobody does the measuring. So the rules about letter size and placement are effectively unenforced, and manufacturers know it.</p>
+
+    <p>Meanwhile the problem has grown a second half. Rule 6(10) of the LMPC Rules requires online listings to carry the same declarations as the physical package, and amendments in February and April 2026 added new obligations around country-of-origin display for imported goods, with provisions landing on 1 July 2027. An inspector can walk into a shop. Nobody has given them a way to walk into Amazon.</p>
+
+    <div class="plain">
+      <div class="tag">Why anyone should care</div>
+      <p>If the MRP is printed in letters too small to read, or the net quantity is buried in a crowded corner of the packet, the consumer cannot check what they are paying for or how much they are getting. The rules about size and placement exist precisely so the declarations cannot be technically present but practically invisible.</p>
+    </div>
+
+    <h3>What happens when a violation is found</h3>
+    <p>The outcome is not a rating or a score. It is a legal proceeding. The offence is either <strong>compounded</strong> — settled by paying a fixed sum — or prosecuted. The compounding amounts run from ₹2,000 for a retailer up to ₹50,000 for a manufacturer or importer.</p>
+
+    <p>That single fact shapes our entire design. Whatever our system outputs has to hold up when a manufacturer's lawyer disputes it. We are not building something that gives an opinion. We are building something that produces <strong>evidence</strong>.</p>
   </div>
-</section>
+</div>
 
-<section>
-  <h2>The system, in four parts</h2>
-  <p class="lede">A photograph enters at the top and a signed report leaves at the bottom. Each part does one job and hands off to the next. Learn these four and you can place any question a judge asks.</p>
+<hr class="rule" style="margin-top:52px">
+
+<div class="part" id="p2">
+  <div class="partno">Part 02</div>
+  <h2>What we are building</h2>
+  <p class="lede">One rule engine, two ways to feed it.</p>
+
+  <div class="body">
+    <p>At the centre sits a piece of software that knows the LMPC Rules. You give it a set of facts about a package — what the label says, how big the letters are, how large the package is — and it tells you which rules pass, which fail, and which do not apply, citing the exact rule number every time. That is the <strong>engine</strong>, and it is the valuable part.</p>
+
+    <p>The engine cannot see. It never touches a photograph or a web page. Things that <em>can</em> see feed it, and we are building two of them.</p>
+
+    <h4>Client one — the field scanner</h4>
+    <p>An inspector standing in a shop photographs a package with their phone, with an ordinary bank card held flat against the label. The system works out the real-world size of everything in the photo, reads the declarations, measures the letter heights in millimetres, runs the rules, and produces an annotated photograph plus a draft inspection report.</p>
+
+    <h4>Client two — the listing checker</h4>
+    <p>A browser add-on that reads whatever product page the officer is already looking at on Amazon or Flipkart, pulls out the same declarations, and runs the <em>same</em> engine against them.</p>
+
+    <div class="plain">
+      <div class="tag">Why this shape matters</div>
+      <p>Rule 6(1) is the same law whether the declarations are printed on a wrapper or displayed in a web page. So the rules do not need writing twice. Only the part that <em>reads</em> differs — a camera in one case, a web page in the other.</p>
+      <p>That is why adding the second client costs us roughly 15% more work but roughly doubles the reach of the project. It is the single best structural decision in the design.</p>
+    </div>
+
+    <h3>The sentence that captures it</h3>
+    <p style="font-family:var(--serif);font-size:21px;line-height:1.45;color:var(--ink);margin-top:18px;max-width:60ch">We are not building a scanner. We are building an evidence pipeline — a photograph becomes a millimetre measurement, becomes a cited rule, becomes a report an officer can sign.</p>
+  </div>
+</div>
+
+<hr class="rule" style="margin-top:52px">
+
+<div class="part" id="p3">
+  <div class="partno">Part 03</div>
+  <h2>Why we win</h2>
+  <p class="lede">Roughly 500 teams can submit an idea against this problem statement. Almost all of them will build the same thing: photograph the label, read the text, tick off a checklist. Here is what we do that they will not.</p>
+
+  <div class="diffs">
+    <div class="diff"><div class="dot"></div><div>
+      <h3>We measure in millimetres, not pixels</h3>
+      <p>Rule 7(2) sets a minimum letter height in actual millimetres — 1 mm on a small packet, up to 6 mm on a large one — and which threshold applies depends on the physical area of the package's front panel. You cannot check that from a photograph unless you can work out real-world size from the image. It is the hardest requirement in the problem statement, and it is the one most teams will quietly skip.</p>
+    </div></div>
+    <div class="diff"><div class="dot"></div><div>
+      <h3>We check the geometry nobody else checks</h3>
+      <p>Rule 8 requires blank space around the net quantity — at least one letter-height above and below, two letter-heights left and right. Rule 9 requires the price to contrast with its background. These are checks about shape and colour, not text, and they are strikingly effective to demonstrate: we draw the legally required empty rectangle on the photo and highlight whatever intrudes into it.</p>
+    </div></div>
+    <div class="diff"><div class="dot"></div><div>
+      <h3>The law is data, not code</h3>
+      <p>The rules changed in 2021, then twice in 2026, with more taking effect in July 2027. In our system the rules live in a file that reads like a list, not buried inside the program. When the law changes, someone edits the list. Better still, every rule records the date it came into force, so a package is judged against the law as it stood on the day it was packed — which is legally required, because you cannot penalise a package made before a rule existed.</p>
+    </div></div>
+    <div class="diff"><div class="dot"></div><div>
+      <h3>We get the exemptions right</h3>
+      <p>Rule 26 exempts packages of 10 grams or less — but not tobacco. Food packaging follows FSSAI rules rather than this clause. Bidis need no date. A checker that flags an exempt 5-gram sachet as illegal will be dismissed by a real inspector within thirty seconds. Handling exemptions correctly is the clearest possible proof that we actually read the law.</p>
+    </div></div>
+    <div class="diff"><div class="dot"></div><div>
+      <h3>We refuse to guess</h3>
+      <p>When the system cannot establish scale reliably — no card in the photo, or a curved bottle — it returns "measurement required" rather than inventing a violation. For a tool whose output ends up in a legal proceeding, knowing when to say nothing is a feature. An enforcement tool that overclaims is worse than useless.</p>
+    </div></div>
+  </div>
+
+  <h3>The numbers that prove we read the law</h3>
+  <div class="nums">
+    <div class="num"><div class="k">Rule 7(2), Table I</div><div class="v">1.0 – 6.0 mm</div>
+      <div class="c">Minimum letter height, scaling with the area of the front panel.</div></div>
+    <div class="num"><div class="k">Rule 8(1) proviso</div><div class="v">1× / 2×</div>
+      <div class="c">Blank space around net quantity: 1× letter height above and below, 2× left and right.</div></div>
+    <div class="num"><div class="k">Rule 26(a)</div><div class="v">10 g / 10 ml</div>
+      <div class="c">At or below this a package is exempt — except tobacco.</div></div>
+    <div class="num"><div class="k">Rule 32A</div><div class="v">₹2,000 – ₹50,000</div>
+      <div class="c">Compounding, retailer through to manufacturer or importer.</div></div>
+    <div class="num"><div class="k">Rule 7(4)</div><div class="v">40%</div>
+      <div class="c">Front panel area of a bottle or can = 40% of height × circumference.</div></div>
+    <div class="num"><div class="k">ISO/IEC 7810 ID-1</div><div class="v">85.60 × 53.98</div>
+      <div class="c">Millimetres. Every bank card on earth. This is our ruler.</div></div>
+  </div>
+</div>
+
+<hr class="rule" style="margin-top:52px">
+
+<div class="part" id="p4">
+  <div class="partno">Part 04</div>
+  <h2>How it actually works</h2>
+  <p class="lede">A photograph goes in at the top and a signed report comes out at the bottom. Four parts, each doing one job and handing on to the next.</p>
+
+  <div class="flow">
+    <svg viewBox="0 0 640 132" role="img" aria-label="Photograph flows through Ruler, Eye, Lawyer and Clerk to produce a report">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <g fill="none" stroke="currentColor" stroke-width="1.2" color="#9A7016" opacity=".85">
+        <line x1="86" y1="52" x2="122" y2="52" marker-end="url(#ar)"/>
+        <line x1="212" y1="52" x2="248" y2="52" marker-end="url(#ar)"/>
+        <line x1="338" y1="52" x2="374" y2="52" marker-end="url(#ar)"/>
+        <line x1="464" y1="52" x2="500" y2="52" marker-end="url(#ar)"/>
+      </g>
+      <g font-family="IBM Plex Mono, monospace" font-size="9.5" fill="#6E756F">
+        <text x="8" y="30">PHOTO</text>
+        <text x="130" y="30">01</text>
+        <text x="256" y="30">02</text>
+        <text x="382" y="30">03</text>
+        <text x="508" y="30">04</text>
+      </g>
+      <g font-family="IBM Plex Serif, serif" font-size="15" font-weight="600" fill="currentColor">
+        <text x="8" y="52">+ card</text>
+        <text x="130" y="52">Ruler</text>
+        <text x="256" y="52">Eye</text>
+        <text x="382" y="52">Lawyer</text>
+        <text x="508" y="52">Clerk</text>
+      </g>
+      <g font-family="IBM Plex Sans, sans-serif" font-size="10.5" fill="#6E756F">
+        <text x="8" y="72">the input</text>
+        <text x="130" y="72">pixels → mm</text>
+        <text x="256" y="72">reads text</text>
+        <text x="382" y="72">applies law</text>
+        <text x="508" y="72">writes report</text>
+      </g>
+      <g stroke="#D6D8D2" stroke-width="1">
+        <line x1="8" y1="92" x2="632" y2="92"/>
+      </g>
+      <g font-family="IBM Plex Mono, monospace" font-size="9" fill="#9A7016">
+        <text x="130" y="110">scale.py</text>
+        <text x="256" y="110">extract.py</text>
+        <text x="382" y="110">engine.py + rules.yaml</text>
+        <text x="508" y="110">report.py</text>
+      </g>
+    </svg>
+  </div>
 
   <div class="stages">
     <div class="stage">
       <div class="idx">01</div>
       <div>
         <h3>The Ruler</h3>
-        <div class="file">scale.py</div>
-        <p>Finds the bank card the officer placed in the photo. Because every bank card on earth is exactly the same size, once we know how many pixels wide the card is, we know the real-world size of everything else in the picture.</p>
-        <div class="say"><b>Say it like this</b>It converts pixels into millimetres. Without this step, nothing else in the system is legally meaningful.</div>
+        <div class="file">scale.py — turns pixels into millimetres</div>
+        <p>This is the part that makes the whole project possible, so it is worth understanding properly.</p>
+        <div class="plain">
+          <div class="tag">The problem it solves</div>
+          <p>Photograph a packet and a letter might come out 40 pixels tall. Is that 2 millimetres or 5? There is no way to tell — it depends entirely on how close the camera was.</p>
+          <p>So we put something of known size in the shot. Every bank card in the world is exactly 85.60 by 53.98 millimetres, fixed by an international standard. If the card measures 1,000 pixels across the photo, then one pixel is 0.0856 mm, and that 40-pixel letter is 3.4 mm. The unknown becomes known.</p>
+        </div>
+        <p>There is a second job here. Photos are almost never taken perfectly square-on, so the packet appears as a skewed shape. Using the card's four corners — which we know form a perfect rectangle in reality — the software mathematically flattens the image as though it had been photographed straight on. The technical name is a <strong>homography</strong>. Think of it as un-tilting the picture.</p>
+        <p>This step also decides when to give up. If the card is lying on a table beside an upright box rather than held against the label, the two surfaces are at different angles and the measurement would be wrong. We detect that and refuse, rather than reporting a confident wrong number.</p>
       </div>
     </div>
 
@@ -210,9 +386,16 @@
       <div class="idx">02</div>
       <div>
         <h3>The Eye</h3>
-        <div class="file">extract.py</div>
-        <p>Locates the blocks of text on the label, then reads them — the MRP, the net quantity, the manufacturer's address, the date. It only reports what the label says. It is never asked whether anything is legal.</p>
-        <div class="say"><b>Say it like this</b>This is the only part that uses AI, and it only reads. It has no opinion about the law.</div>
+        <div class="file">extract.py — finds the text and reads it</div>
+        <p>This runs in two halves, deliberately split, and the split is one of our strongest technical arguments.</p>
+        <p>First, ordinary image processing finds <em>where</em> the text is — no AI involved. It darkens and thickens the image until each line of print merges into a solid blob, then records where those blobs sit. This is reliable and repeatable.</p>
+        <p>Second, those cropped regions are sent to an AI model, which reads <em>what</em> they say and identifies which is the MRP, which is the net quantity, which is the manufacturer's address.</p>
+        <div class="plain">
+          <div class="tag">Why split it this way</div>
+          <p>AI models are excellent at reading text, especially messy multilingual Indian packaging where traditional character-recognition software fails badly. But they are unreliable at saying precisely <em>where</em> something is on an image — ask for exact coordinates and they will approximate.</p>
+          <p>Ordinary image processing is the exact opposite: hopeless at understanding meaning, extremely precise about position.</p>
+          <p>So each does only the half it is good at. Our millimetre measurements come from pixel arithmetic, never from an AI's guess. <strong>The AI reads. It never decides anything.</strong></p>
+        </div>
       </div>
     </div>
 
@@ -220,9 +403,16 @@
       <div class="idx">03</div>
       <div>
         <h3>The Lawyer</h3>
-        <div class="file">engine.py + rules/lmpc-2011.yaml</div>
-        <p>Holds the Legal Metrology Rules as a written-down list, not as programming. It takes the facts from the first two parts and decides what passes, what fails, and what is exempt — citing the exact rule number every time.</p>
-        <div class="say"><b>Say it like this</b>The law lives in a file a legal officer could read and edit. When the rules change, nobody has to rewrite the software.</div>
+        <div class="file">engine.py + rules/lmpc-2011.yaml — applies the law</div>
+        <p>The engine takes the facts assembled so far and produces findings. Each finding names the rule, the verdict, what was measured and what was required — for example: <em>Rule 7(2) Table I — FAIL — measured 2.1 mm, required 2.5 mm.</em></p>
+        <p>Crucially, the rules themselves are not written in program code. They sit in a separate file, written as a structured list that a person can read and edit.</p>
+        <div class="plain">
+          <div class="tag">Two ways to teach software the law</div>
+          <p>The obvious way is to write instructions into the program: "if the price is missing, report a violation". This works until the law changes, at which point you need a programmer, a new version, and a redeployment.</p>
+          <p>The better way is to write the rules in a list the program reads when it runs. Changing the law becomes editing a line of text. A legal officer could do it.</p>
+          <p>We do the second — and we go one step further. Every rule records the date it came into force, so a package packed in 2024 is judged against the 2024 version of the law. That is not a nicety; penalising a package for breaking a rule that did not yet exist would be legally indefensible.</p>
+        </div>
+        <p>Before any rule runs, the engine checks <strong>exemptions</strong>. Is this under 10 grams? Is it tobacco, which loses that exemption? Is it a food product, where a different statute applies? Is it a bidi, which needs no date? Getting this ordering right is what separates a tool an inspector trusts from one they switch off.</p>
       </div>
     </div>
 
@@ -230,236 +420,241 @@
       <div class="idx">04</div>
       <div>
         <h3>The Clerk</h3>
-        <div class="file">report.py</div>
-        <p>Draws the findings back onto the photograph and produces a draft inspection report — every violation with its rule citation, the measured value, the required value, and the compounding amount, ready for an officer to confirm and sign.</p>
-        <div class="say"><b>Say it like this</b>The output is not a score. It is evidence that has to survive a legal challenge.</div>
+        <div class="file">report.py — produces the evidence</div>
+        <p>Two things come out. First, the photograph with the findings drawn onto it: each declaration boxed and labelled with its rule, failures marked in red with measured against required, and the Rule 8 clear-space rectangle drawn around the net quantity so an intrusion is visible at a glance.</p>
+        <p>Second, a draft inspection report laid out like an official memo — a findings table with a rule citation on every row, the applicable compounding amount, the photographic evidence, and a signature block.</p>
+        <p>It is marked throughout as a draft awaiting officer confirmation. That is deliberate and legally necessary: <strong>the system proposes, the officer decides.</strong> Software cannot compound an offence.</p>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<hr class="rule">
+<hr class="rule" style="margin-top:52px">
 
-<section>
-  <h2>What each piece of technology actually does</h2>
-  <p class="lede">If a judge asks why you chose something, the honest answer is always "because of what it saved us from building". That framing is stronger than naming a technology you can't defend.</p>
+<div class="part" id="p5">
+  <div class="partno">Part 05</div>
+  <h2>The stack</h2>
+  <p class="lede">"Stack" just means the set of tools the software is built from. Ours is deliberately small, because there are two of us writing code and the fastest way to fail is to build four things badly instead of one thing well.</p>
 
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Thing</th><th>What it does, plainly</th><th>Why this one</th></tr></thead>
+      <thead><tr><th>Tool</th><th>What it does</th><th>Why this one</th></tr></thead>
       <tbody>
-        <tr><td>Python</td><td>The language the whole system is written in.</td><td>The image tools and the rules both live here. One language for two developers.</td></tr>
-        <tr><td>OpenCV</td><td>Does the seeing and the measuring — finds the card, straightens the photo, measures letter heights.</td><td>The industry-standard image library. No AI involved, so measurements are repeatable.</td></tr>
-        <tr><td>Claude</td><td>Reads the text off the label after OpenCV has found it.</td><td>Indian packaging is multilingual and glossy; traditional OCR fails on it.</td></tr>
-        <tr><td>YAML</td><td>The plain-text file the Legal Metrology rules are written in.</td><td>Readable by a lawyer. Changing the law does not mean changing the software.</td></tr>
-        <tr><td>FastAPI</td><td>The small web server that connects the phone to the engine.</td><td>Lightweight. No heavy framework we would only use 5% of.</td></tr>
-        <tr><td>PWA</td><td>Makes the website install on a phone like an app, with an icon.</td><td>No app store, no device management — a state deploys it by sending a link.</td></tr>
-        <tr><td>Files, not a database</td><td>Each inspection is saved as a folder: original photo, measurements, findings.</td><td>The original photo is never modified, which is what evidence requires.</td></tr>
+        <tr><td>Python</td><td>The programming language everything is written in.</td><td>The image tools and the rule engine both live naturally here. One language, not two.</td></tr>
+        <tr><td>OpenCV</td><td>Does the seeing and measuring — finds the card, un-tilts the photo, measures letter heights.</td><td>The standard image-processing library. No AI inside, so measurements are exactly repeatable.</td></tr>
+        <tr><td>Claude</td><td>Reads the text once OpenCV has located it.</td><td>Indian packaging is multilingual, glossy and low-contrast, which is precisely where old-style character recognition fails.</td></tr>
+        <tr><td>YAML</td><td>The plain-text format the rules are written in.</td><td>Readable by a non-programmer. Changing the law does not mean changing the software.</td></tr>
+        <tr><td>FastAPI</td><td>The small web server connecting the phone to the engine.</td><td>Lightweight. A bigger framework would give us features we would never use.</td></tr>
+        <tr><td>HTML + CSS</td><td>The two screens the officer sees: take a photo, see the result.</td><td>Hand-written, no framework. Two screens do not justify a build system that can break the night before a demo.</td></tr>
+        <tr><td>PWA</td><td>Makes that website install onto a phone with its own icon.</td><td>No app store, no device management — a state deploys to its whole inspectorate by sending a link.</td></tr>
+        <tr><td>Files on disk</td><td>Storage. Each inspection is one folder.</td><td>See below.</td></tr>
       </tbody>
     </table>
   </div>
-</section>
 
-<section>
-  <h2>The five things that make us different</h2>
-  <p class="lede">Every other team will read the label and tick a checklist. These are the five answers to "so what?"</p>
+  <h3>Why there is no database</h3>
+  <p>This surprises people, so here is the reasoning. A database is a filing system for when you have a great many records and many people writing at once. We have one inspector taking one photograph. An inspection is simply a folder:</p>
 
-  <div class="diffs">
-    <div class="diff"><div class="dot"></div><div>
-      <h3>We measure in millimetres, not pixels</h3>
-      <p>Rule 7(2) sets a minimum letter height in millimetres, and the threshold depends on the physical area of the package. You cannot check that from a photograph unless you recover real-world scale. Almost nobody will.</p>
-    </div></div>
-    <div class="diff"><div class="dot"></div><div>
-      <h3>The law is data, not code</h3>
-      <p>The rules changed in 2021 and twice in 2026, with more landing in July 2027. Our rule file carries the date each rule took effect, so we judge a package against the law as it stood on the day it was packed.</p>
-    </div></div>
-    <div class="diff"><div class="dot"></div><div>
-      <h3>We get the exemptions right</h3>
-      <p>A 5 gram sachet is exempt. Unless it is tobacco. Food packaging follows FSSAI, not this clause. A checker that flags an exempt package loses an inspector's trust in thirty seconds.</p>
-    </div></div>
-    <div class="diff"><div class="dot"></div><div>
-      <h3>We cover e-commerce, not just shelves</h3>
-      <p>Rule 6(10) requires the same declarations on an online listing. One officer checks one packet at a time; the same rule engine can check thousands of listings.</p>
-    </div></div>
-    <div class="diff"><div class="dot"></div><div>
-      <h3>We refuse to guess</h3>
-      <p>When we cannot establish scale, we return "measurement required" instead of a violation. An enforcement tool that overclaims is worthless in a compounding proceeding.</p>
-    </div></div>
+  <div class="tablewrap" style="min-width:0">
+    <table>
+      <tbody>
+        <tr><td>original.jpg</td><td>The photograph exactly as taken. Never modified — this is the evidence.</td></tr>
+        <tr><td>rectified.jpg</td><td>The un-tilted version used for measuring.</td></tr>
+        <tr><td>annotated.jpg</td><td>The photo with findings drawn on.</td></tr>
+        <tr><td>facts.json</td><td>What was found on the label and how big it was.</td></tr>
+        <tr><td>findings.json</td><td>Which rules passed, failed, or did not apply.</td></tr>
+      </tbody>
+    </table>
   </div>
-</section>
 
-<hr class="rule">
-
-<section>
-  <h2>Numbers worth memorising</h2>
-  <p class="lede">Six of these, delivered without hesitation, do more for credibility than any slide. Pick the four you can say cold.</p>
-
-  <div class="nums">
-    <div class="num"><div class="k">Rule 7(2), Table&nbsp;I</div><div class="v">1.0 – 6.0 mm</div>
-      <div class="c">Minimum letter height, from ≤50 cm² panels up to above 2500 cm².</div></div>
-    <div class="num"><div class="k">Rule 8(1) proviso</div><div class="v">1× / 2×</div>
-      <div class="c">Clear space around the net quantity — 1× the numeral height above and below, 2× left and right.</div></div>
-    <div class="num"><div class="k">Rule 26(a)</div><div class="v">10 g / 10 ml</div>
-      <div class="c">At or below this, a package is exempt from these rules — except tobacco.</div></div>
-    <div class="num"><div class="k">Rule 32A compounding</div><div class="v">₹2,000 – ₹50,000</div>
-      <div class="c">Retailer at the low end, manufacturer or importer at the high end.</div></div>
-    <div class="num"><div class="k">ISO/IEC 7810 ID-1</div><div class="v">85.60 × 53.98</div>
-      <div class="c">Millimetres. Every bank card in the world. This is our ruler.</div></div>
-    <div class="num"><div class="k">Rule 7(4), cylinders</div><div class="v">40%</div>
-      <div class="c">Display panel area of a bottle or can = 40% of height × circumference.</div></div>
-    <div class="num"><div class="k">Our accuracy target</div><div class="v">± 0.2 mm</div>
-      <div class="c">Against a caliper, on a flat package. A target we test, not a claim we make.</div></div>
-    <div class="num"><div class="k">Rule 6(1) &amp; 6(2)</div><div class="v">9 declarations</div>
-      <div class="c">Manufacturer, origin, name, net quantity, date, MRP, consumer care, unit price, dimensions.</div></div>
+  <div class="plain">
+    <div class="tag">The evidence argument</div>
+    <p>Because the original photograph sits untouched in its own folder and nothing ever writes back to it, we can prove the image was not altered after capture. A database that updates rows in place makes that harder to demonstrate, not easier.</p>
+    <p>When we genuinely need searching and history, the answer is SQLite — a database that is a single file, needs no server, and ships with Python already. Not a heavyweight database that would drag in cloud hosting we do not need.</p>
   </div>
-</section>
 
-<section>
-  <h2>Questions judges actually ask</h2>
-  <p class="lede">Tap to open. Read the answer in your own words afterwards — a memorised paragraph sounds memorised.</p>
+  <h3>What it costs to run</h3>
+  <p>About ₹2 per package scanned, which is the cost of the AI reading the label. Demo results are saved to disk, so rehearsing costs nothing and works with no internet at all. Only the reading step needs a network — every measurement runs on the device.</p>
+</div>
+
+<hr class="rule" style="margin-top:52px">
+
+<div class="part" id="p6">
+  <div class="partno">Part 06</div>
+  <h2>What we are not building</h2>
+  <p class="lede">Scope discipline is not laziness — it is the single biggest reason hackathon teams finish nothing. Each of these is a deliberate decision with a reason, and each can be defended if asked.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Not building</th><th>Why not</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td>Native mobile app</td><td>The problem statement asks for "web and/or mobile". Our web app installs on a phone and opens the camera. A native app would not make one measurement more accurate — it is the same camera.</td><td>Only if a real need appears</td></tr>
+        <tr><td>Login &amp; user roles</td><td>Required by the problem statement, wins nothing in the internal round.</td><td>Sept – Dec</td></tr>
+        <tr><td>Dashboard &amp; history</td><td>Same. Impressive-looking, but it is not what makes us different.</td><td>Sept – Dec</td></tr>
+        <tr><td>Curved bottles</td><td>The maths that recovers scale assumes a flat surface. On a bottle we return "undetermined" instead of a wrong number.</td><td>Stretch goal</td></tr>
+        <tr><td>Automated scraping</td><td>Amazon and Flipkart block scrapers. A demo that dies on stage is worse than no demo — so our add-on reads pages the officer already has open.</td><td>Never</td></tr>
+        <tr><td>eMaap integration</td><td>There is no public interface to connect to. We build our records so they can export into it, and we say exactly that.</td><td>Export format only</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="rule" style="margin-top:52px">
+
+<div class="part" id="p7">
+  <div class="partno">Part 07</div>
+  <h2>The plan</h2>
+
+  <div class="tl">
+    <div class="ev done">
+      <div class="when">Done</div>
+      <h4>Research and design</h4>
+      <p>Problem statement analysed, LMPC Rules 2011 read and the relevant provisions extracted, full system design written and committed to the repository.</p>
+    </div>
+    <div class="ev">
+      <div class="when">Next — days away</div>
+      <h4>Internal college round</h4>
+      <p>The goal is not a finished product. It is proving we are the team most likely to win. One demonstration that nobody else can match: photograph a real product, measure its MRP text in millimetres, and cite the exact rule it breaks — plus the rule file on screen to show the law is data.</p>
+    </div>
+    <div class="ev">
+      <div class="when">20 September 2026</div>
+      <h4>SIH portal submission</h4>
+      <p>Idea title, description, and a six-slide PDF on the official template. Hard deadline — no extensions. Only 500 ideas are accepted per problem statement.</p>
+    </div>
+    <div class="ev">
+      <div class="when">September – December</div>
+      <h4>Full build</h4>
+      <p>Browser add-on for e-commerce listings, dashboard and inspection history, user roles, editable report export, wider rule coverage, and curved-surface handling if time allows.</p>
+    </div>
+    <div class="ev">
+      <div class="when">December 2026</div>
+      <h4>Grand Finale</h4>
+      <p>Offline, at a nodal centre. Four to five teams per problem statement are shortlisted. Prize is ₹1,50,000, and the intellectual property is shared with the ministry.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="rule" style="margin-top:52px">
+
+<div class="part" id="p8">
+  <div class="partno">Part 08</div>
+  <h2>Limits and honesty</h2>
+  <p class="lede">Knowing what our system cannot do is part of understanding it. These are also the five ways to lose a room, each paired with the true version — which is almost always nearly as strong.</p>
+
+  <div class="traps">
+    <div class="trap"><div class="no">Never say</div>
+      <div class="swap">"We're integrated with eMaap." → <b>"Our records are export-ready for eMaap."</b> There is no public interface. A judge from the ministry will know.</div></div>
+    <div class="trap"><div class="no">Never say</div>
+      <div class="swap">"Our AI detects violations." → <b>"The AI reads the label; a rule engine decides."</b> The first version throws away our best architectural argument.</div></div>
+    <div class="trap"><div class="no">Never say</div>
+      <div class="swap">"It's 99% accurate." → <b>"Our target is ±0.2 mm on flat packages, and here is how we test it."</b> Never quote a number nobody measured.</div></div>
+    <div class="trap"><div class="no">Never say</div>
+      <div class="swap">"It works on any package." → <b>"Flat panels today; curved surfaces return 'undetermined' by design."</b></div></div>
+    <div class="trap"><div class="no">Never say</div>
+      <div class="swap">"It's already deployed." → <b>"It runs today on real products we bought and measured."</b> Claim only what you can show on the spot.</div></div>
+  </div>
+</div>
+
+<hr class="rule" style="margin-top:52px">
+
+<div class="part" id="p9">
+  <div class="partno">Part 09</div>
+  <h2>Questions you will get</h2>
+  <p class="lede">From judges, from teammates, from anyone you explain this to. Read the answers, then say them in your own words.</p>
 
   <div class="qa">
     <details open><summary>Isn't this just OCR?</summary><div class="a">
-      <p>No — OCR reads text, and roughly half the rules we check are not about what the label says. They are about <em>how big it is, where it sits, and whether it contrasts with the background</em>.</p>
-      <p>Rule 7(2) sets a minimum letter height in millimetres. Rule 8 requires empty space around the net quantity. Rule 9 requires the price to contrast with the background. No OCR system answers any of those questions.</p>
+      <p>No. OCR reads text, and roughly half the rules we check are not about what the label says — they are about <em>how big it is, where it sits, and whether it contrasts with the background</em>.</p>
+      <p>Rule 7(2) sets a minimum letter height in millimetres. Rule 8 requires blank space around the net quantity. Rule 9 requires the price to contrast with its background. No OCR system answers any of those.</p>
     </div></details>
 
-    <details><summary>What if the AI hallucinates a violation?</summary><div class="a">
-      <p>It can't, because the AI never decides anything. It only reads text off the label. Every legal conclusion comes from a rule file that a human wrote, and each finding cites its rule number.</p>
-      <p>So a wrong output traces to exactly one of two places — a misread field, or a misapplied rule — and both are inspectable. We can open the file and show you.</p>
+    <details><summary>What if the AI gets it wrong?</summary><div class="a">
+      <p>The AI only reads text. It never decides whether anything is legal. Every legal conclusion comes from the rule file, and each finding cites its rule number.</p>
+      <p>So a wrong result traces to exactly one of two places — a misread field or a misapplied rule — and both can be opened and inspected. That is very different from a system where an AI produces a verdict nobody can explain.</p>
     </div></details>
 
-    <details><summary>How can you possibly measure millimetres from a photograph?</summary><div class="a">
-      <p>The officer places a bank card in the frame. Every bank card in the world is exactly 85.60 by 53.98 millimetres — it's an ISO standard. Once we know how many pixels wide the card is, we know the true size of everything else in the photo.</p>
-      <p>It's also normal evidentiary practice: forensic photography has always included a physical scale in frame. And if there is no card, we say "measurement required" rather than guess.</p>
+    <details><summary>How can you measure millimetres from a photograph?</summary><div class="a">
+      <p>A bank card in the frame. Every bank card is exactly 85.60 by 53.98 millimetres by international standard, so once we know how wide the card is in pixels, we know the true size of everything else in the picture.</p>
+      <p>It is also standard evidentiary practice — forensic photography has always included a physical scale in shot. And with no card, we say "measurement required" rather than guess.</p>
     </div></details>
 
     <details><summary>Why a web app instead of a mobile app?</summary><div class="a">
-      <p>It installs to the home screen and opens the phone's camera, so for the officer it behaves like an app. But there is no app store and no device management — a state can deploy it to its whole inspectorate by sending a link.</p>
-      <p>The problem statement asks for a "web and/or mobile" application. A native app would not make a single measurement more accurate, because it's the same camera.</p>
+      <p>It installs to the home screen and opens the phone's camera, so to the officer it behaves like an app. But there is no app store and no device management, so a state can deploy it to an entire inspectorate by sending a link.</p>
+      <p>The problem statement asks for "web and/or mobile". And a native app would not improve a single measurement, because it is the same camera either way.</p>
     </div></details>
 
     <details><summary>What happens when the law changes?</summary><div class="a">
-      <p>Nothing breaks. The rules are a data file, not programming — a legal officer edits a line.</p>
-      <p>And every rule carries the date it came into force, so we judge a package against the law as it stood on its date of packing. That matters legally: you cannot penalise a package manufactured before an amendment commenced.</p>
+      <p>Someone edits the rule file. Nothing is rebuilt and no programmer is needed.</p>
+      <p>And because every rule records when it took effect, a package is judged against the law as it stood on its packing date — which matters, because you cannot penalise a package made before a rule commenced.</p>
     </div></details>
 
-    <details><summary>How is this different from the food-scanner apps that already exist?</summary><div class="a">
-      <p>Those tell a consumer what is inside the food. We tell an enforcement officer whether the <em>package itself</em> breaks the Legal Metrology Rules — MRP declaration, net quantity, manufacturer's address, letter height, placement.</p>
-      <p>Different law, different user, different output. Ours is evidence for a compounding proceeding, not nutrition advice.</p>
+    <details><summary>How is this different from the food scanner apps that already exist?</summary><div class="a">
+      <p>Those tell a consumer what is inside the food. We tell an enforcement officer whether the <em>package</em> breaks the Legal Metrology Rules — the MRP declaration, the net quantity, the manufacturer's address, the letter height, the placement.</p>
+      <p>Different law, different user, different output. Ours is evidence for a legal proceeding, not nutrition advice.</p>
     </div></details>
 
     <details><summary>Won't it produce false positives?</summary><div class="a">
-      <p>That is exactly why exemptions are checked <em>before</em> any rule runs. A packet at or under 10 grams is exempt under Rule 26(a) — unless it is tobacco. Food packaging follows FSSAI rather than Rule 6(1)(a). Bidis need no date declaration.</p>
-      <p>If you flag a 5 gram sachet as non-compliant, a real inspector stops trusting the tool in thirty seconds. Getting the exemptions right is how we prove we read the law.</p>
+      <p>That is exactly why exemptions are checked before any rule runs. A packet of 10 grams or less is exempt under Rule 26(a) — unless it is tobacco. Food packaging follows FSSAI. Bidis need no date declaration.</p>
+      <p>Flag a 5-gram sachet as illegal and a real inspector stops trusting the tool immediately. Getting exemptions right is how we prove we read the law rather than skimmed it.</p>
     </div></details>
 
     <details><summary>Are you replacing inspectors?</summary><div class="a">
-      <p>No. The system proposes; the officer adjudicates. Every finding is a draft an officer confirms and signs.</p>
-      <p>That isn't modesty, it's law — a machine cannot compound an offence. What we remove is the hours spent measuring by hand, not the judgement.</p>
+      <p>No. The system proposes, the officer decides, and every finding is a draft an officer confirms and signs. That is not modesty — software cannot compound an offence.</p>
+      <p>What we remove is the hours of manual measuring that currently means nobody checks letter sizes at all.</p>
     </div></details>
 
-    <details><summary>Does it work offline?</summary><div class="a">
-      <p>The measurement runs entirely on the device, so all the geometry checks work with no signal. Only the text reading needs a network.</p>
-      <p>That matters — inspections happen in markets and warehouses where connectivity is poor.</p>
+    <details><summary>Does it work without internet?</summary><div class="a">
+      <p>All the measurement runs on the device, so every geometry check works offline. Only the text reading needs a network.</p>
+      <p>This matters in practice — inspections happen in markets and warehouses where signal is poor.</p>
     </div></details>
 
     <details><summary>What about Hindi and regional languages?</summary><div class="a">
-      <p>We deliberately do not use a traditional OCR engine, because Indian packaging is multilingual, glossy and low-contrast, and that is precisely where OCR fails. We use a vision model for reading instead.</p>
-      <p>The geometry side doesn't care about script at all — a letter's height in millimetres is the same measurement in any language.</p>
+      <p>We deliberately avoid traditional character-recognition software, because multilingual, glossy, low-contrast Indian packaging is exactly where it fails. We use an AI model for reading instead.</p>
+      <p>And the measurement side does not care about script at all — a letter's height in millimetres is the same measurement in any language.</p>
     </div></details>
 
     <details><summary>What is your training data?</summary><div class="a">
-      <p>We don't train a model, so we don't need a labelled dataset — which is a real advantage, because no such dataset exists for Indian packaging compliance.</p>
-      <p><em>The law is our dataset.</em> The LMPC Rules 2011 encoded as rules. We validate by buying real products and measuring them with a caliper.</p>
-    </div></details>
-
-    <details><summary>How would a government actually deploy this?</summary><div class="a">
-      <p>A state Legal Metrology department hosts it; officers open a link and install it to their phones. No procurement of devices, no app store approval.</p>
-      <p>We designed the inspection records to export into the format used by <em>eMaap</em>, the National Legal Metrology Portal that the Department of Consumer Affairs launched in December 2024 — so this feeds the system that already exists rather than creating a parallel one.</p>
+      <p>We do not train a model, so we need no labelled dataset — which is a genuine advantage, because no such dataset exists for Indian packaging compliance and building one would take longer than the competition.</p>
+      <p><em>The law is our dataset.</em> We validate by buying real products and measuring them with a caliper.</p>
     </div></details>
 
     <details><summary>What can't it do yet?</summary><div class="a">
-      <p>Curved surfaces. The maths that recovers scale assumes a flat face, so on a bottle we return "undetermined" for the geometry rules rather than a number we can't stand behind. Unwrapping cylinders is on our roadmap.</p>
-      <p>Answering this one openly is worth more than dodging it. A team that knows its own limits reads as a team that has actually built something.</p>
+      <p>Curved surfaces. The scale-recovery maths assumes a flat face, so on a bottle we return "undetermined" for the geometry rules rather than a number we cannot stand behind. Unwrapping cylinders is on the roadmap.</p>
+      <p>Answering this openly is worth more than dodging it — a team that knows its own limits reads as a team that has actually built something.</p>
     </div></details>
   </div>
-</section>
+</div>
 
-<hr class="rule">
+<hr class="rule" style="margin-top:52px">
 
-<section>
-  <h2>When you don't know the answer</h2>
-  <p class="lede">This is the section that matters most. Judges probe until they find the edge — they are testing whether the team is real, not whether one person knows everything. A confident handoff reads as a functioning team. A bluff that collapses discredits everything you said before it.</p>
+<div class="part" id="p10">
+  <div class="partno">Part 10</div>
+  <h2>Glossary</h2>
 
-  <div class="scripts">
-    <div class="script">
-      <div class="when">It's a teammate's layer</div>
-      <div class="line">"That's the vision side — [name] owns it. What I can tell you is what it hands to my layer: a set of measurements in millimetres with a confidence value attached."</div>
-    </div>
-    <div class="script">
-      <div class="when">We haven't measured it yet</div>
-      <div class="line">"We haven't measured that yet. Our target is ±0.2 millimetres and it's written into our test plan — I'd rather give you the number after we've tested it than guess now."</div>
-    </div>
-    <div class="script">
-      <div class="when">It's deliberately out of scope</div>
-      <div class="line">"We decided not to handle that in version one. Curved bottles return 'undetermined' rather than a wrong measurement — we'd rather return nothing than something an officer can't defend."</div>
-    </div>
-    <div class="script">
-      <div class="when">You genuinely don't understand the question</div>
-      <div class="line">"Can I check I've understood — are you asking about X or about Y?" &nbsp;Asking a clarifying question reads as competence. Answering the wrong question reads as panic.</div>
-    </div>
-    <div class="script">
-      <div class="when">The judge is right and you were wrong</div>
-      <div class="line">"You're right, that's a gap. We'll look at it." &nbsp;Then move on. Do not argue, and do not over-apologise.</div>
-    </div>
-  </div>
-</section>
+  <dl class="gloss">
+    <div class="gt"><dt>LMPC Rules</dt><dd>Legal Metrology (Packaged Commodities) Rules, 2011. The regulation our system checks against.</dd></div>
+    <div class="gt"><dt>Legal Metrology</dt><dd>The law of weights and measures — that what is declared on a package matches what is inside, and is declared properly.</dd></div>
+    <div class="gt"><dt>Declaration</dt><dd>Something the law requires to be printed on a package: MRP, net quantity, manufacturer's address, and so on.</dd></div>
+    <div class="gt"><dt>Principal display panel</dt><dd>The front face of a package — the side a shopper sees. Its area determines the minimum letter height.</dd></div>
+    <div class="gt"><dt>Compounding</dt><dd>Settling an offence by paying a fixed sum instead of going to court. ₹2,000 to ₹50,000 here.</dd></div>
+    <div class="gt"><dt>Exemption</dt><dd>A case where the rules do not apply — packages of 10 g or less, restaurant food, certain medicines.</dd></div>
+    <div class="gt"><dt>eMaap</dt><dd>The National Legal Metrology Portal, launched by the Department of Consumer Affairs in December 2024 to unify state departments.</dd></div>
+    <div class="gt"><dt>Stack</dt><dd>The set of tools and languages a piece of software is built from.</dd></div>
+    <div class="gt"><dt>Engine</dt><dd>Here, the part that applies the rules to facts and produces findings. It never touches images.</dd></div>
+    <div class="gt"><dt>Client</dt><dd>Something that feeds the engine — our camera scanner and our browser add-on are both clients.</dd></div>
+    <div class="gt"><dt>Homography</dt><dd>The mathematics that un-tilts a photograph taken at an angle, so it looks as if shot straight on.</dd></div>
+    <div class="gt"><dt>OCR</dt><dd>Optical Character Recognition — older software that converts pictures of text into text. It struggles with Indian packaging.</dd></div>
+    <div class="gt"><dt>YAML</dt><dd>A plain-text format for writing structured lists that both people and programs can read. Our rules live in one.</dd></div>
+    <div class="gt"><dt>PWA</dt><dd>Progressive Web App — a website that installs onto a phone with its own icon and works offline.</dd></div>
+    <div class="gt"><dt>API</dt><dd>The way one piece of software talks to another. We use one to send label crops to the AI model.</dd></div>
+    <div class="gt"><dt>Repository</dt><dd>The shared folder holding all our code and documents, kept on GitHub so everyone has the same version.</dd></div>
+  </dl>
+</div>
 
-<section>
-  <h2>Do not claim these</h2>
-  <p class="lede">Each of these will be checked by someone in the room, and each has a true version that is nearly as strong.</p>
-
-  <div class="traps">
-    <div class="trap">
-      <div class="no">Never say</div>
-      <div class="swap">"We're integrated with eMaap." &nbsp;→&nbsp; <b>"Our records are export-ready for eMaap."</b> There is no public eMaap API. A Ministry judge will know.</div>
-    </div>
-    <div class="trap">
-      <div class="no">Never say</div>
-      <div class="swap">"Our AI detects violations." &nbsp;→&nbsp; <b>"The AI reads the label; a deterministic rule engine decides."</b> The first sentence throws away our best architectural argument.</div>
-    </div>
-    <div class="trap">
-      <div class="no">Never say</div>
-      <div class="swap">"It's 99% accurate." &nbsp;→&nbsp; <b>"Our target is ±0.2 mm on flat packages, and here is how we test it."</b> Never quote a number nobody measured.</div>
-    </div>
-    <div class="trap">
-      <div class="no">Never say</div>
-      <div class="swap">"It works on any package." &nbsp;→&nbsp; <b>"Flat panels today; curved surfaces return 'undetermined' by design."</b></div>
-    </div>
-    <div class="trap">
-      <div class="no">Never say</div>
-      <div class="swap">"It's already deployed." &nbsp;→&nbsp; <b>"It runs today on real products we bought and measured."</b> Claim exactly what you can demonstrate on the spot.</div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <h2>Who answers what</h2>
-  <p class="lede">Assign one owner per layer before you walk in. When a question lands, the owner answers and everyone else stays quiet — a team that talks over itself looks like a team that hasn't built anything.</p>
-
-  <div class="owners">
-    <div class="owner"><div><h3>The law and the rule file</h3><p>Rules, exemptions, citations, penalties. The strongest role in the room — most questions land here.</p></div><div class="name">owner</div></div>
-    <div class="owner"><div><h3>Measurement and vision</h3><p>Scale recovery, millimetres, contrast, clear space, accuracy and its limits.</p></div><div class="name">owner</div></div>
-    <div class="owner"><div><h3>The application</h3><p>The phone experience, offline behaviour, the report, how an officer actually uses it.</p></div><div class="name">owner</div></div>
-    <div class="owner"><div><h3>Deployment and impact</h3><p>Who uses it, how a state rolls it out, eMaap, e-commerce scale, why it matters.</p></div><div class="name">owner</div></div>
-  </div>
-</section>
-
-<hr class="rule">
+<hr class="rule" style="margin-top:52px">
 
 <footer>
-  <p>Internal briefing for the SIH 2026 internal selection round. Every rule number, threshold and penalty on this page is taken from the Legal Metrology (Packaged Commodities) Rules, 2011 and the Legal Metrology Act, 2009 — check the project's <span style="font-family:var(--mono);font-size:12.5px">DOMAIN-NOTES.md</span> before quoting anything not listed here.</p>
+  <p>Internal handbook for team Caffiene and Debugging, SIH 2026, Problem Statement 26034. Every rule number, threshold and penalty here comes from the Legal Metrology (Packaged Commodities) Rules, 2011 and the Legal Metrology Act, 2009 — the full research is in <span style="font-family:var(--mono);font-size:12.5px">DOMAIN-NOTES.md</span> and the technical design in <span style="font-family:var(--mono);font-size:12.5px">docs/superpowers/specs/</span>. "Praman" is a placeholder project name and can still change.</p>
 </footer>
 
 </div>

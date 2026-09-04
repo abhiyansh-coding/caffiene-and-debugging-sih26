@@ -4,7 +4,8 @@
 **Problem Statement:** SIH26034 — Software System to check compliance of Packaged
 Commodities under Legal Metrology (Packaged Commodities) Rules, 2011 by scanning
 products, images and labels.
-**Codename:** *Praman* (प्रमाण — "standard" and "proof"). Placeholder; team picks the final name.
+**Team:** Caffiene and Debugging
+**Project name:** none yet — the SIH portal asks for an *idea title*, not a brand, so this stays undecided until the team picks one.
 
 ---
 
@@ -401,7 +402,7 @@ Seven. No torch, no OCR engine, no database driver, no node_modules.
 ### Repository layout
 
 ```
-praman/
+repository root
   engine/
     scale.py          # ID-1 card detection, homography, mm/px + confidence
     extract.py        # text-region location, VLM reading, field matching

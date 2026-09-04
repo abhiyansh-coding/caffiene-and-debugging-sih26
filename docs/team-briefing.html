@@ -290,6 +290,10 @@
       <p>Rule 26 exempts packages of 10 grams or less — but not tobacco. Food packaging follows FSSAI rules rather than this clause. Bidis need no date. A checker that flags an exempt 5-gram sachet as illegal will be dismissed by a real inspector within thirty seconds. Handling exemptions correctly is the clearest possible proof that we actually read the law.</p>
     </div></div>
     <div class="diff"><div class="dot"></div><div>
+      <h3>It runs entirely offline, at no cost per scan</h3>
+      <p>Text recognition, measurement and the rules all run on the device. No fee per inspection for a state to carry, no product photographs sent to a foreign service, and it works in markets and warehouses with no signal — which is where inspections actually happen. An AI model is available as an optional fallback, switched off by default.</p>
+    </div></div>
+    <div class="diff"><div class="dot"></div><div>
       <h3>We refuse to guess</h3>
       <p>When the system cannot establish scale reliably — no card in the photo, or a curved bottle — it returns "measurement required" rather than inventing a violation. For a tool whose output ends up in a legal proceeding, knowing when to say nothing is a feature. An enforcement tool that overclaims is worse than useless.</p>
     </div></div>
@@ -349,7 +353,7 @@
       <g font-family="IBM Plex Sans, sans-serif" font-size="10.5" fill="#6E756F">
         <text x="8" y="72">the input</text>
         <text x="130" y="72">pixels → mm</text>
-        <text x="256" y="72">reads text</text>
+        <text x="256" y="72">OCR + patterns</text>
         <text x="382" y="72">applies law</text>
         <text x="508" y="72">writes report</text>
       </g>
@@ -387,15 +391,22 @@
       <div>
         <h3>The Eye</h3>
         <div class="file">extract.py — finds the text and reads it</div>
-        <p>This runs in two halves, deliberately split, and the split is one of our strongest technical arguments.</p>
-        <p>First, ordinary image processing finds <em>where</em> the text is — no AI involved. It darkens and thickens the image until each line of print merges into a solid blob, then records where those blobs sit. This is reliable and repeatable.</p>
-        <p>Second, those cropped regions are sent to an AI model, which reads <em>what</em> they say and identifies which is the MRP, which is the net quantity, which is the manufacturer's address.</p>
+        <p>This runs in three steps, and none of them is an AI deciding anything.</p>
+        <p>First, ordinary image processing finds <em>where</em> the text is. It darkens and thickens the image until each line of print merges into a solid blob, then records where those blobs sit. Precise, repeatable, no AI.</p>
+        <p>Second, each of those regions — already un-tilted, cropped and reduced to clean black-on-white — is read by <strong>Tesseract</strong>, free open-source text-recognition software that runs entirely on the device and has trained models for Hindi, Tamil, Telugu, Bengali, Gujarati, Kannada and Marathi.</p>
+        <p>Third, we work out which piece of text is the MRP, which is the net quantity, which is the address — using pattern matching, not intelligence.</p>
         <div class="plain">
-          <div class="tag">Why split it this way</div>
-          <p>AI models are excellent at reading text, especially messy multilingual Indian packaging where traditional character-recognition software fails badly. But they are unreliable at saying precisely <em>where</em> something is on an image — ask for exact coordinates and they will approximate.</p>
-          <p>Ordinary image processing is the exact opposite: hopeless at understanding meaning, extremely precise about position.</p>
-          <p>So each does only the half it is good at. Our millimetre measurements come from pixel arithmetic, never from an AI's guess. <strong>The AI reads. It never decides anything.</strong></p>
+          <div class="tag">Why pattern matching is enough here</div>
+          <p>On ordinary writing you would need something clever to work out what a sentence means. But these declarations are not ordinary writing — <strong>the law dictates how they must be worded.</strong></p>
+          <p>The price is always near the letters "MRP" or "Maximum Retail Price" or a rupee sign. The net quantity is always a number followed by g, kg, ml or litre. The address always ends in a six-digit PIN code. Rule 6(1)(ll) goes as far as specifying the exact format of the unit price as "Rs__ per g".</p>
+          <p>We are matching patterns against a statute, not guessing at free text. That is why simple, free, offline software is the right tool.</p>
         </div>
+        <p>An AI model sits behind this as an <strong>optional fallback</strong>, switched off by default. If the text recognition cannot resolve a region — a heavily stylised brand font, very faint print — that one crop can be sent to a model to read. It reads only. With the fallback off, an unresolved region is simply reported as "undetermined", which the system already treats as a valid answer.</p>
+        <div class="plain">
+          <div class="tag">Why offline-first is the better system, not just the cheaper one</div>
+          <p>No cost per scan for a state government to carry. No product photographs leaving the device, which removes a real objection about data going to a foreign service. And it works in markets and warehouses with no signal, which is where inspections actually happen.</p>
+        </div>
+      </div>
       </div>
     </div>
 
@@ -442,7 +453,9 @@
       <tbody>
         <tr><td>Python</td><td>The programming language everything is written in.</td><td>The image tools and the rule engine both live naturally here. One language, not two.</td></tr>
         <tr><td>OpenCV</td><td>Does the seeing and measuring — finds the card, un-tilts the photo, measures letter heights.</td><td>The standard image-processing library. No AI inside, so measurements are exactly repeatable.</td></tr>
-        <tr><td>Claude</td><td>Reads the text once OpenCV has located it.</td><td>Indian packaging is multilingual, glossy and low-contrast, which is precisely where old-style character recognition fails.</td></tr>
+        <tr><td>Tesseract</td><td>Reads the text once OpenCV has located and cleaned it.</td><td>Free, offline, open source, with Indian language support. It sees a cleaned-up crop, not a glossy photo.</td></tr>
+        <tr><td>Regex</td><td>Works out which text is the MRP, the net quantity, the address.</td><td>The law prescribes the wording, so patterns beat intelligence here.</td></tr>
+        <tr><td>AI model</td><td><em>Optional fallback</em> — reads a crop that Tesseract could not.</td><td>Off by default. Costs nothing when unused, and the system works fully without it.</td></tr>
         <tr><td>YAML</td><td>The plain-text format the rules are written in.</td><td>Readable by a non-programmer. Changing the law does not mean changing the software.</td></tr>
         <tr><td>FastAPI</td><td>The small web server connecting the phone to the engine.</td><td>Lightweight. A bigger framework would give us features we would never use.</td></tr>
         <tr><td>HTML + CSS</td><td>The two screens the officer sees: take a photo, see the result.</td><td>Hand-written, no framework. Two screens do not justify a build system that can break the night before a demo.</td></tr>
@@ -474,7 +487,7 @@
   </div>
 
   <h3>What it costs to run</h3>
-  <p>About ₹2 per package scanned, which is the cost of the AI reading the label. Demo results are saved to disk, so rehearsing costs nothing and works with no internet at all. Only the reading step needs a network — every measurement runs on the device.</p>
+  <p><strong>Nothing.</strong> The whole default path runs on the device — there is no charge per scan and no internet needed. If the optional AI fallback is switched on it costs roughly ₹0.40 a scan, so a full hackathon of development, testing and demos would come to under ₹100 even with it enabled for everything.</p>
 </div>
 
 <hr class="rule" style="margin-top:52px">
@@ -545,7 +558,7 @@
     <div class="trap"><div class="no">Never say</div>
       <div class="swap">"We're integrated with eMaap." → <b>"Our records are export-ready for eMaap."</b> There is no public interface. A judge from the ministry will know.</div></div>
     <div class="trap"><div class="no">Never say</div>
-      <div class="swap">"Our AI detects violations." → <b>"The AI reads the label; a rule engine decides."</b> The first version throws away our best architectural argument.</div></div>
+      <div class="swap">"Our AI detects violations." → <b>"Nothing AI decides anything — a rule engine does, and it cites the rule."</b> The first version throws away our best architectural argument.</div></div>
     <div class="trap"><div class="no">Never say</div>
       <div class="swap">"It's 99% accurate." → <b>"Our target is ±0.2 mm on flat packages, and here is how we test it."</b> Never quote a number nobody measured.</div></div>
     <div class="trap"><div class="no">Never say</div>
@@ -568,9 +581,9 @@
       <p>Rule 7(2) sets a minimum letter height in millimetres. Rule 8 requires blank space around the net quantity. Rule 9 requires the price to contrast with its background. No OCR system answers any of those.</p>
     </div></details>
 
-    <details><summary>What if the AI gets it wrong?</summary><div class="a">
-      <p>The AI only reads text. It never decides whether anything is legal. Every legal conclusion comes from the rule file, and each finding cites its rule number.</p>
-      <p>So a wrong result traces to exactly one of two places — a misread field or a misapplied rule — and both can be opened and inspected. That is very different from a system where an AI produces a verdict nobody can explain.</p>
+    <details><summary>Is there AI in this? What if it gets something wrong?</summary><div class="a">
+      <p>By default there is no AI in the pipeline at all. Text recognition is free offline software, field identification is pattern matching, measurement is arithmetic, and the verdict comes from the rule file. An AI model exists only as an optional fallback for text that cannot otherwise be read, and it is switched off by default.</p>
+      <p>Even when it is on, it only <em>reads</em>. It never decides whether anything is legal. So a wrong result traces to exactly one of two places — a misread field or a misapplied rule — and both can be opened and inspected. That is very different from a system where a model produces a verdict nobody can explain.</p>
     </div></details>
 
     <details><summary>How can you measure millimetres from a photograph?</summary><div class="a">
@@ -604,12 +617,12 @@
     </div></details>
 
     <details><summary>Does it work without internet?</summary><div class="a">
-      <p>All the measurement runs on the device, so every geometry check works offline. Only the text reading needs a network.</p>
-      <p>This matters in practice — inspections happen in markets and warehouses where signal is poor.</p>
+      <p>Entirely, yes. Text recognition, measurement and the rule engine all run on the device. Nothing needs a network unless the optional AI fallback is switched on.</p>
+      <p>This matters twice over. Inspections happen in markets and warehouses where signal is poor — and because no product photograph leaves the device, there is no question about government inspection data going to a foreign service.</p>
     </div></details>
 
     <details><summary>What about Hindi and regional languages?</summary><div class="a">
-      <p>We deliberately avoid traditional character-recognition software, because multilingual, glossy, low-contrast Indian packaging is exactly where it fails. We use an AI model for reading instead.</p>
+      <p>The text recognition we use has trained models for Hindi, Tamil, Telugu, Bengali, Gujarati, Kannada, Marathi and more. It struggles on raw glossy photographs — but by the time text reaches it, our pipeline has already un-tilted the image, cropped to a single line and reduced it to clean black-on-white, which is a far easier thing to read.</p>
       <p>And the measurement side does not care about script at all — a letter's height in millimetres is the same measurement in any language.</p>
     </div></details>
 
@@ -643,10 +656,12 @@
     <div class="gt"><dt>Engine</dt><dd>Here, the part that applies the rules to facts and produces findings. It never touches images.</dd></div>
     <div class="gt"><dt>Client</dt><dd>Something that feeds the engine — our camera scanner and our browser add-on are both clients.</dd></div>
     <div class="gt"><dt>Homography</dt><dd>The mathematics that un-tilts a photograph taken at an angle, so it looks as if shot straight on.</dd></div>
-    <div class="gt"><dt>OCR</dt><dd>Optical Character Recognition — older software that converts pictures of text into text. It struggles with Indian packaging.</dd></div>
+    <div class="gt"><dt>OCR</dt><dd>Optical Character Recognition — software that converts pictures of text into text. We use Tesseract, which is free, open source and runs offline.</dd></div>
+    <div class="gt"><dt>Tesseract</dt><dd>The specific OCR software we use. Free, offline, with trained models for Indian scripts.</dd></div>
+    <div class="gt"><dt>Regex</dt><dd>A way of describing a text pattern — "the letters MRP followed by a number". How we identify which declaration is which.</dd></div>
     <div class="gt"><dt>YAML</dt><dd>A plain-text format for writing structured lists that both people and programs can read. Our rules live in one.</dd></div>
     <div class="gt"><dt>PWA</dt><dd>Progressive Web App — a website that installs onto a phone with its own icon and works offline.</dd></div>
-    <div class="gt"><dt>API</dt><dd>The way one piece of software talks to another. We use one to send label crops to the AI model.</dd></div>
+    <div class="gt"><dt>API</dt><dd>The way one piece of software talks to another — here, how the optional fallback would send a crop to an AI model.</dd></div>
     <div class="gt"><dt>Repository</dt><dd>The shared folder holding all our code and documents, kept on GitHub so everyone has the same version.</dd></div>
   </dl>
 </div>

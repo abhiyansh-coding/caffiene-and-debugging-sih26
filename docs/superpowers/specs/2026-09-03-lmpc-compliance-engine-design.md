@@ -27,7 +27,8 @@ image or a web page; the clients never decide what is legal.
 - Rule pack covering ~15 rules and 6 exemption predicates (§6, §7)
 - Scale recovery from an ISO/IEC 7810 ID-1 reference card
 - Millimetre measurement of glyph height, letter width, clear space, and contrast
-- VLM-based field extraction from label photographs
+- Offline OCR field extraction (Tesseract + statutory-pattern matching), with an
+  optional AI fallback for labels OCR cannot resolve
 - Annotated result image and draft PDF inspection report
 - Two-screen web UI (upload/capture → result)
 - Browser extension reading product listing pages
@@ -53,7 +54,7 @@ image or a web page; the clients never decide what is legal.
                                    ▼
                        ┌──────────────────────────┐
                        │ extract.py               │ declarations as text
-                       │  VLM read + CV boxes     │ + glyph bounding boxes
+                       │  OCR + pattern match     │ + glyph bounding boxes
                        └───────────┬──────────────┘
                                    ▼
                        ┌──────────────────────────┐
@@ -75,8 +76,8 @@ image or a web page; the clients never decide what is legal.
                        └──────────────────────────┘
 ```
 
-**The load-bearing boundary:** `extract` reads, `engine` decides. A vision model is
-never asked whether something is legal — only what the label says. Every legal
+**The load-bearing boundary:** `extract` reads, `engine` decides. Nothing that reads is
+ever asked whether something is legal — only what the label says. Every legal
 conclusion comes from a deterministic evaluator over a declarative rule pack. This is
 what makes findings auditable, and it is the answer to "what if the AI hallucinates?"
 A wrong result traces to exactly one of two places: a misread field, or a misapplied rule.
@@ -291,7 +292,8 @@ State IT departments hate MDM rollouts; this is an advantage, not a compromise.
 **Stack:** FastAPI serving one hand-written HTML page. No React, no npm, no build step.
 Full visual control, and it runs from a laptop with no internet.
 
-**Offline constraint.** VLM extraction needs the network; college demo wifi cannot be
+**Offline constraint.** The default path is fully offline. Only the optional AI
+fallback needs a network, and college demo wifi cannot be
 trusted. Extraction results for demo products are cached to disk, and all geometry runs
 locally in OpenCV. If the network dies mid-demo, the impressive half still works.
 
@@ -308,7 +310,7 @@ locally in OpenCV. If the network dies mid-demo, the impressive half still works
 
 | Risk | Reality | Mitigation |
 |---|---|---|
-| OCR quality on Indian packaging | Multilingual, glossy, low contrast, curved — Tesseract will embarrass us | VLM for reading; classical CV for geometry; cache demo extractions |
+| OCR quality on stylised or low-contrast print | Tesseract struggles on decorative brand fonts and faint fine print — but it sees a rectified, cropped, binarised region, not a raw glossy photo | Measure the real hit rate rather than assume it; optional AI fallback for regions OCR cannot resolve; geometry never depends on either |
 | Non-coplanar reference card | Silently wrong measurements — the worst failure mode | Detect plane disagreement, refuse rather than guess |
 | Curved packages | Planar homography invalid | `undetermined`, stated openly |
 | Scope creep into dashboards | The classic way hackathon teams finish nothing | Everything in §2's deferred table stays deferred |
@@ -347,7 +349,9 @@ One language, one process, no services. Every choice below is justified by what 
 | Computer vision | OpenCV (`opencv-python-headless`) + NumPy | Torch, PaddleOCR, EasyOCR |
 | Text location | OpenCV adaptive threshold + morphological dilation | An OCR engine dependency |
 | Glyph measurement | `cv2.connectedComponentsWithStats` | OCR bounding boxes, which are too loose to measure |
-| Text reading | Anthropic Python SDK, `claude-opus-5` | Tesseract, which fails on real Indian packaging |
+| Text reading | Tesseract (`pytesseract`) on rectified, binarised crops | A paid API on the critical path |
+| Field identification | Regex against the statutory phrasings | A model asked to infer which field is which |
+| Fallback reading | Anthropic SDK, `claude-haiku-4-5` — **optional, off by default** | Nothing; without it, unresolvable regions stay `undetermined` |
 | Rule pack | PyYAML | A rules DSL, a database of rules, a config service |
 | Report PDF | `@media print` stylesheet + browser print-to-PDF | ReportLab, WeasyPrint, headless Chrome |
 | Persistence | **The filesystem** | Postgres, SQLAlchemy, Alembic, Docker |
@@ -374,16 +378,43 @@ hackathon prototype will never have.
 
 ### Why the reading pipeline is shaped the way it is
 
-Vision models are excellent at *reading* and unreliable at *precise bounding boxes*.
-Classical CV is the reverse. So we split them along that line:
+Three tools, each doing only the part it is good at.
 
-1. **Locate** text regions with adaptive threshold + morphological dilation (OpenCV)
-2. **Crop** each region and send the crops to `claude-opus-5` for reading
-3. **Match** returned semantic fields (MRP, net quantity, …) back to their source regions
-4. **Measure** the matched region with `connectedComponentsWithStats` for exact glyph extents
+1. **Locate** text regions with adaptive threshold + morphological dilation (OpenCV).
+   Classical CV is precise about position and useless about meaning.
+2. **Read** each rectified, cropped, binarised region with Tesseract. This is a very
+   different input from a raw glossy photograph, and Tesseract handles it far better —
+   with trained models for Hindi, Tamil, Telugu, Bengali, Gujarati, Kannada and Marathi.
+3. **Identify** which field is which by regex, not by inference — see below.
+4. **Measure** the matched region with `connectedComponentsWithStats` for exact glyph
+   extents. Never OCR bounding boxes, which are too loose to measure against a 0.5 mm
+   threshold.
 
-We never trust a model's coordinates and never ask an OCR engine to understand Hindi
-packaging. Each tool does the half it is good at.
+**Why regex beats a model at field identification here.** The declarations are not
+arbitrary text — the law prescribes their wording, which is exactly what makes them
+pattern-matchable:
+
+| Field | Statutory anchors |
+|---|---|
+| MRP | `MRP`, `M.R.P.`, `Maximum Retail Price`, `₹`, `Rs.` + numeral |
+| Net quantity | `Net Qty`, `Net Wt`, `Net Content` + numeral + SI unit |
+| Manufacture date | `Mfg`, `MFD`, `Packed on`, or an `MM/YYYY` pattern |
+| Consumer care | `Customer Care`, `Consumer Complaints`, + email and phone regex |
+| Manufacturer address | a six-digit PIN code is a strong anchor (Rule 6(1)(a) Expl. I) |
+| Unit sale price | `per g`, `per kg`, `per ml`, `per litre`, `per cm`, `per metre` |
+
+Rule 6(1)(ll) literally specifies the format as `Rs__ per g`. We are pattern-matching
+against a statute, not against free text.
+
+**The optional AI fallback.** When OCR confidence is low or a mandatory field is not
+found, `extract.py` may send that single crop to `claude-haiku-4-5`. It is **off by
+default**, it reads only — never decides — and with it disabled the region simply stays
+`undetermined`, which the engine already handles as a first-class verdict.
+
+**Why offline-first is the better system, not just the cheaper one.** No per-scan cost
+for a state to carry; no product photographs leaving the device, which removes a real
+data-sovereignty objection from a ministry evaluator; and it works in markets and
+godowns with no signal, which is where inspections actually happen.
 
 ### Dependencies, complete
 
@@ -394,10 +425,15 @@ jinja2
 opencv-python-headless
 numpy
 pyyaml
+pytesseract          # + system package: tesseract-ocr, tesseract-ocr-hin
+
+# optional, only for the fallback reader
 anthropic
 ```
 
-Seven. No torch, no OCR engine, no database driver, no node_modules.
+Seven required, one optional. No torch, no database driver, no node_modules.
+Tesseract needs a system package (`brew install tesseract tesseract-lang`), which is
+free and offline — unlike an API key, it is a one-time install, not a running cost.
 
 ### Repository layout
 
@@ -405,7 +441,7 @@ Seven. No torch, no OCR engine, no database driver, no node_modules.
 repository root
   engine/
     scale.py          # ID-1 card detection, homography, mm/px + confidence
-    extract.py        # text-region location, VLM reading, field matching
+    extract.py        # text-region location, OCR, statutory pattern matching
     measure.py        # px → mm, glyph height/width, clear space, contrast
     engine.py         # rule pack evaluator
     report.py         # annotated image renderer
@@ -421,13 +457,18 @@ repository root
     test_engine.py    # rule evaluation, exemptions, temporal selection
     test_scale.py     # measurement accuracy against known references
   inspections/        # runtime output, gitignored
-  fixtures/           # demo product photos + cached VLM extractions
+  fixtures/           # demo product photos + cached extractions
 ```
 
-### API cost
+### Running cost
 
-A label scan is roughly 2,500 input tokens (image + prompt) and 500 output tokens.
-On `claude-opus-5` at $5/MTok input and $25/MTok output that is **about ₹2 per scan**.
-Demo extractions are cached to `fixtures/`, so repeated demo runs cost nothing and work
-offline. For the December e-commerce sweep, listing checks are text-only and the Batch
-API halves the cost again.
+**Zero on the default path.** OCR runs locally; nothing is billed per scan.
+
+The optional fallback, if enabled, is roughly **₹0.40 per scan** on `claude-haiku-4-5`
+($1/MTok in, $5/MTok out) — reading a text crop needs no reasoning, so the cheapest
+model is the correct one, and we send crops rather than whole images because image cost
+scales with pixels. A full hackathon of development, testing and demos is on the order
+of 200 scans, so under ₹100 even with the fallback on for every one of them.
+
+Demo extractions are cached to `fixtures/`, so rehearsing costs nothing and works with
+the network unplugged.
